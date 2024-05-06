@@ -45,14 +45,16 @@ void    check_size(char **map)
     j = 0;
     while (map[j] && map[j + 1])
     {
-        printf("hah%c\n", map[j][0]);
 
-        if (ft_strlen(map[j]) != ft_strlen(map[j + 1]))
+        printf("hah%c\n", map[j][ft_strlen(map[j]) - 1]);
+        if (ft_strlen(map[j]) != ft_strlen(map[j + 1]) && map[j][0] != '1' && map[j][ft_strlen(map[j]) - 1 ] != '1')
         {
+
             write(2, "invalidMap\n", 11);
             exit(1);
         }
         j++;
+
     }
     if (ft_strlen(map[0]) == j)
     {
