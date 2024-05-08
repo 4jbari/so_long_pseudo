@@ -6,7 +6,7 @@
 /*   By: ajbari <ajbari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 19:48:58 by ajbari            #+#    #+#             */
-/*   Updated: 2024/02/29 19:45:03 by ajbari           ###   ########.fr       */
+/*   Updated: 2024/05/08 19:30:57 by ajbari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,22 @@ char	*rest(char *line)
 
 int	check_nl(char *buffer)
 {
-	while (*buffer)
+	int i;
+
+	i = 0;
+	while (buffer[i])
 	{
-		if ((*buffer) == '\n')
+		if ((buffer[i]) == '\n')
+		{
+			if (buffer[i+1] == '\n')
+			{
+                write(2, "empty line\n", 11);
+                exit(1);
+			}
+
 			return (1);
-		buffer++;
+		}
+		i++;
 	}
 	return (0);
 }
