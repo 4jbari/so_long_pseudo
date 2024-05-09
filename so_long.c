@@ -1,6 +1,6 @@
 #include "so_long.h"
 
-void    parsing(char *av)
+char    **parsing(char *av)
 {
     char **buffer;
     buffer = NULL;
@@ -34,36 +34,61 @@ void    parsing(char *av)
         x++;
     }
     // printf("chekpath%d\n", check_path(buffer));
-    //
+    return (buffer);
 
 }
+
+void print_background(char **map, void *mlx)
+{
+    int i;
+    int j;
+    int x = 0;
+    int y = 0;
+    mlx_texture_t *texture;
+    
+    i = 0;
+    j = 0;
+    while (map[j])
+    {
+        x = 0;
+        i = 0;
+        while (map[j][i])
+        {
+            if (map[j][i] == '1')
+            {
+                texture = mlx_load_png("RockWall_Dark.png");
+                void *img = mlx_texture_to_image(mlx, texture);
+                mlx_image_to_window(mlx, img, x, y);
+
+            }
+            x+= 64;
+            i++;
+        }
+        j++;
+        y+= 64;
+
+    }
+
+}
+
+
 
 int main(int ac, char **av)
 {
     (void)ac;
     if (!av[1])
-        write (2, "nofile", 7 );
-    parsing(av[1]);
+        write (2, "nofile\n", 8);
+    char **map = parsing(av[1]);
 
-    // void *mlx_ptr;
-    // void *win_ptr;
+    int x = ft_strlen(map[0]);
+    printf("%d\n", x);
+    int y = 1;
+    while (map[y])
+        y++;
 
-    // mlx_ptr = mlx_init(1200, 600, "test", true);
-    // if (!mlx_ptr)
-    //     return -1;
+    mlx_t *mlx = mlx_init(x * 64,y * 64, "test", true);
 
-    // win_ptr = mlx_new_image(mlx_ptr, 1200, 600);
-    // if (!win_ptr)
-    //     return -1;
-    // mlx_image_t    *img = mlx_new_image(mlx_ptr,1200, 600);
-    // memset(img->pixels, 200, img->height * img->width * sizeof(int32_t));
-    // mlx_image_to_window(mlx_ptr, img, 0, 0);
-    
-    
-    
-
-    // mlx_loop(mlx_ptr);
-
-
+    print_background(map, mlx);
+    mlx_loop(mlx);
 
 }

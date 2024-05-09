@@ -14,6 +14,12 @@
 
 #define BUFFERSIZE 4
 #endif
+typedef struct info{
+    int x;
+    int y;
+
+} info_t;
+
 
 char	*get_next_line(int fd);
 size_t	ft_strlen(const char *s);
