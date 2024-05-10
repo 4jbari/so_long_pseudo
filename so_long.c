@@ -61,6 +61,13 @@ void print_background(char **map, void *mlx)
                 mlx_image_to_window(mlx, img, x, y);
 
             }
+            else if(map[j][i] == 'C')
+            {
+                texture = mlx_load_png("_png_output-onlinepngtools.png");
+                void *img = mlx_texture_to_image(mlx, texture);
+                mlx_image_to_window(mlx, img, x, y);
+            }
+
             x+= 64;
             i++;
         }
