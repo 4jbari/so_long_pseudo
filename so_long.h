@@ -15,18 +15,23 @@
 #define BUFFERSIZE 4
 #endif
 typedef struct info{
-    int x;
-    int y;
+    int         c;
+    int         x;
+    int         y;
+    mlx_image_t *player;
+    mlx_t       *mlx;
+    char        **map;
 
-} info_t;
 
+} game_t;
 
+char    **parsing(char *av, game_t *game);
 char	*get_next_line(int fd);
 size_t	ft_strlen(const char *s);
 int     check_format(char *av);
 void    ft_read1(int fd, char ***buffer);
 void    check_size(char **map);
-void    check_elements(char **buffer);
+void    check_elements(char **buffer, game_t *game);
 int    check_path(char **map);
 
 

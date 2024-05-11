@@ -1,101 +1,132 @@
 #include "so_long.h"
 
-char    **parsing(char *av)
+void    print_element(int x, int y, char *path, game_t *game)
 {
-    char **buffer;
-    buffer = NULL;
-
-    if (!check_format(av))
-    {
-        write(2, "Error\nWrongFormat\n", 19);
-        exit (1);
-
-    }
-    printf("CorrectFormat\n");
-    int fd = open(av, O_RDONLY);
-    if (fd == -1)
-        write(2, "notExisting\n", 12);
-    printf(">>%d\n", fd);
-    ft_read1(fd, &buffer);
-    int x  = 0 ;
-    while (buffer[x])
-    {
-        printf("buffer :%s\n", buffer[x]);
-        x++;
-    }
-    check_size(buffer);
-    check_elements(buffer);
-    if (!check_path(buffer))
-        write(2, "Error:nopath\n", 13);
-    x  = 0 ;
-    while (buffer[x])
-    {
-        printf("buffer :%s\n", buffer[x]);
-        x++;
-    }
-    // printf("chekpath%d\n", check_path(buffer));
-    return (buffer);
+    mlx_texture_t *texture = mlx_load_png(path);
+    mlx_image_t *img = mlx_texture_to_image(game->mlx, texture);
+    mlx_image_to_window(game->mlx, img, x, y);
 
 }
 
-void print_background(char **map, void *mlx)
+void get_player(char **map, game_t *game , void *mlx)
 {
     int i;
     int j;
+    mlx_texture_t *texture;
+
     int x = 0;
     int y = 0;
-    mlx_texture_t *texture;
-    
+    j = 0;
+    i = 0;
+    while (map[j])
+    {
+        i = 0;
+        x = 0;
+        while (map[j][i])
+        {
+            if (map[j][i] == 'P')
+            {
+                texture = mlx_load_png("output-onlinepngtools.png");
+                game->player = mlx_texture_to_image(mlx, texture);
+                mlx_image_to_window(mlx, game->player, x, y);
+            }
+            i++;
+            x+= 64;
+        }
+        y += 64;
+        j++;
+    }
+}
+void print_background(char **map, void *mlx, game_t *game)
+{
+    int i;
+    int j;
     i = 0;
     j = 0;
     while (map[j])
     {
-        x = 0;
+        game->x = 0;
         i = 0;
         while (map[j][i])
         {
             if (map[j][i] == '1')
-            {
-                texture = mlx_load_png("RockWall_Dark.png");
-                void *img = mlx_texture_to_image(mlx, texture);
-                mlx_image_to_window(mlx, img, x, y);
-
-            }
+                print_element(game->x, game->y, "RockWall_Dark.png", game);
             else if(map[j][i] == 'C')
-            {
-                texture = mlx_load_png("_png_output-onlinepngtools.png");
-                void *img = mlx_texture_to_image(mlx, texture);
-                mlx_image_to_window(mlx, img, x, y);
-            }
-
-            x+= 64;
+                print_element(game->x, game->y, "_png_output-onlinepngtools.png", game);
+            else if(map[j][i] == 'E')
+                print_element(game->x, game->y, "spr_portal_strip8.png", game);
+            game->x+= 64;
             i++;
         }
         j++;
-        y+= 64;
-
+        game->y+= 64;
     }
-
+    get_player(map, game, mlx);
 }
 
+void    move_player(int yo, int xo, game_t *game)
+{
+    game->map[game->player->instances->y/64][game->player->instances->x/64] = '0';
+    int new_y = game->player->instances->y+=yo;
+    int new_x = game->player->instances->x+=xo;
+    if(game->map[new_y/64][new_x/64] == 'C')
+        printf("haha\n\n\n\n");
+    game->map[game->player->instances->y/64][game->player->instances->x/64] = 'P';
 
+}
+void my_keyhook(mlx_key_data_t keydata, void *parm)
+{
+    game_t *game;
+
+    game = (game_t *)parm;
+     int   x  = 0 ;
+    while (game->map[x])
+    {
+        printf("bufferBo:%s\n", game->map[x]);
+        x++;
+    }
+	printf("game->player->instances->y:%c\n", game->map[game->player->instances->y/64][game->player->instances->x/64]);
+    if ((keydata.key == MLX_KEY_DOWN || keydata.key == MLX_KEY_S) && keydata.action == MLX_PRESS \
+        && game->map[game->player->instances->y/64 + 1][game->player->instances->x/64] != '1')
+        move_player(64, 0, game);
+
+	if ((keydata.key == MLX_KEY_RIGHT || keydata.key == MLX_KEY_D )&& keydata.action == MLX_PRESS\
+        && game->map[game->player->instances->y/64][game->player->instances->x/64 + 1] != '1')
+        move_player(0, 64, game);
+
+	if ((keydata.key == MLX_KEY_LEFT || keydata.key == MLX_KEY_A)&& keydata.action == MLX_PRESS\
+        && game->map[game->player->instances->y/64][game->player->instances->x/64-1] != '1')
+        move_player(0, -64, game);
+
+    if ((keydata.key == MLX_KEY_UP || keydata.key == MLX_KEY_W) && keydata.action == MLX_PRESS \
+        && game->map[game->player->instances->y/64 -1 ][game->player->instances->x/64] != '1')
+        move_player(-64, 0, game);
+}
 
 int main(int ac, char **av)
 {
     (void)ac;
+
+
+    game_t game;
     if (!av[1])
         write (2, "nofile\n", 8);
-    char **map = parsing(av[1]);
-
-    int x = ft_strlen(map[0]);
-    printf("%d\n", x);
+    game.map = parsing(av[1], &game);
+    game.x = ft_strlen(game.map[0]);
     int y = 1;
-    while (map[y])
+    while (game.map[y])
         y++;
+    game.y = y;
+    
+    game.mlx = mlx_init(game.x * 64,game.y * 64, "test", true);
+    
 
-    mlx_t *mlx = mlx_init(x * 64,y * 64, "test", true);
+    print_background(game.map, game.mlx, &game);//
 
-    print_background(map, mlx);
-    mlx_loop(mlx);
 
+
+
+    mlx_key_hook(game.mlx, &my_keyhook, &game);
+
+    mlx_loop(game.mlx);
 }

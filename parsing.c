@@ -70,7 +70,7 @@ int    check_path(char **map)
  
     return (0);
 }
-void    check_elements(char **buffer)
+void    check_elements(char **buffer, game_t *game)
 {
     int i;
     int j;
@@ -99,6 +99,7 @@ void    check_elements(char **buffer)
         j++;
     }
     printf("Ecount:%d Ccount:%d Pcount:%d\n", Ecount, Ccount, Pcount);
+    game->c = Ccount;
     if (Ecount < 1 || Ecount > 1 || Pcount < 1 || Pcount > 1 ||Ccount < 1)
     {
         write(2, "must at least one: E,C,P and at most 1 :E ,P\n", 45);
@@ -180,4 +181,42 @@ int check_format(char *av)
             return (0);
     }
     return (0);
+}
+
+char    **parsing(char *av, game_t *game)
+{
+    char **buffer;
+    buffer = NULL;
+
+    if (!check_format(av))
+    {
+        write(2, "Error\nWrongFormat\n", 19);
+        exit (1);
+
+    }
+    printf("CorrectFormat\n");
+    int fd = open(av, O_RDONLY);
+    if (fd == -1)
+        write(2, "notExisting\n", 12);
+    printf(">>%d\n", fd);
+    ft_read1(fd, &buffer);
+    int x  = 0 ;
+    while (buffer[x])
+    {
+        printf("buffer :%s\n", buffer[x]);
+        x++;
+    }
+    check_size(buffer);
+    check_elements(buffer, game);
+    if (!check_path(buffer))
+        write(2, "Error:nopath\n", 13);
+    x  = 0 ;
+    while (buffer[x])
+    {
+        printf("buffer :%s\n", buffer[x]);
+        x++;
+    }
+    // printf("chekpath%d\n", check_path(buffer));
+    return (buffer);
+
 }
