@@ -63,8 +63,8 @@ int    check_path(char **map)
         }
         ys++;
     }
-    printf("nys:%d\n", ys);
-    printf("nys:%d\n", xs);
+    // printf("nys:%d\n", ys);
+    // printf("nys:%d\n", xs);
     if(path_find(map, x, y, xs - 1, ys - 1))
         return (1);
  
@@ -138,7 +138,7 @@ void    check_size(char **map)
     }
     size_t y = 0;
     j--;                                                    // withdrawling from the null 
-        printf("y:>>%zu\n", y);
+        // printf("y:>>%zu\n", y);
     while (map[0][y] && map[0][y] == '1' && map[j][y] == '1')
         y++;
     if (y != ft_strlen(map[0]))
@@ -152,18 +152,20 @@ void    ft_read1(int fd, char ***buffer)
     char *line = NULL;
     char *jn;
     jn = NULL;
-    
-    //spliting
+
     line = get_next_line(fd);
     jn = ft_join(jn, line);
-    free(line);
+    //free(line);
+    //line = NULL;
+    // printf(">>:%s", line);
 
     while (line)
-    {
+    {   
+        free(line);
         line = get_next_line(fd);
         jn = ft_join(jn, line);
-        free(line);
     }
+    free(line);
     *buffer = ft_split(jn,'\n');
     free(jn);
 }
@@ -202,22 +204,22 @@ char    **parsing(char *av, game_t *game)
         write(2, "notExisting\n", 12);
     printf(">>%d\n", fd);
     ft_read1(fd, &buffer);
-    int x  = 0 ;
-    while (buffer[x])
-    {
-        printf("buffer :%s\n", buffer[x]);
-        x++;
-    }
+    // int x  = 0 ;
+    // while (buffer[x])
+    // {
+    //     printf("buffer :%s\n", buffer[x]);
+    //     x++;
+    // }
     check_size(buffer);
     check_elements(buffer, game);
     if (!check_path(buffer))
         write(2, "Error:nopath\n", 13);
-    x  = 0 ;
-    while (buffer[x])
-    {
-        printf("buffer :%s\n", buffer[x]);
-        x++;
-    }
+    // x  = 0 ;
+    // while (buffer[x])
+    // {
+    //     printf("buffer :%s\n", buffer[x]);
+    //     x++;
+    // }
     // printf("chekpath%d\n", check_path(buffer));
     return (buffer);
 

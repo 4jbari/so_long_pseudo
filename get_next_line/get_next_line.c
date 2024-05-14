@@ -6,12 +6,14 @@
 /*   By: ajbari <ajbari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 19:48:58 by ajbari            #+#    #+#             */
-/*   Updated: 2024/05/08 19:30:57 by ajbari           ###   ########.fr       */
+/*   Updated: 2024/05/14 15:19:51 by ajbari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
+//
+#include <stdio.h>
+//
 char	*ft_re_line(char *line)
 {
 	char	*return_line;
@@ -101,7 +103,9 @@ void	ft_read(int fd, char **line)
 			return ;
 		}
 		buffer[bytes_readed] = '\0';
+		// printf("buf === %s\n", buffer);
 		flag = check_nl(buffer);
+		
 		*line = ft_join(*line, buffer);
 	}
 	ft_free(&buffer);
@@ -111,7 +115,6 @@ char	*get_next_line(int fd)
 {
 	static char	*line;
 	char		*new_line;
-
 	new_line = NULL;
 	if (read(fd, new_line, 0) == -1 || BUFFER_SIZE <= 0)
 		return (ft_free(&line));

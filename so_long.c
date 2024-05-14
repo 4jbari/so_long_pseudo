@@ -150,16 +150,19 @@ int main(int ac, char **av)
     while (game.map[y])
         y++;
     game.y = y;
+    int i = 0;
+    while (game.map[i])
+        free(game.map[i++]);
     
-    game.mlx = mlx_init(game.x * 64,game.y * 64, "test", true);
+    // game.mlx = mlx_init(game.x * 64,game.y * 64, "test", true);
     
 
-    print_background(game.map, game.mlx, &game);//
+    // print_background(game.map, game.mlx, &game);//
 
 
 
 
-    mlx_key_hook(game.mlx, &my_keyhook, &game);
+    // mlx_key_hook(game.mlx, &my_keyhook, &game);
 
-    mlx_loop(game.mlx);
+    // mlx_loop(game.mlx);
 }
