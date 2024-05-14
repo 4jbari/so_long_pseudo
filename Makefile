@@ -7,6 +7,9 @@ LIBS	:= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm -framework Cocoa -fr
 SRCS	:= so_long.c parsing.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c
 OBJS	:= ${SRCS:.c=.o}
 
+FS = -fsanitize=address -g
+
+
 all: libmlx libft $(NAME) 
 
 libft :
@@ -19,7 +22,7 @@ libmlx:
 	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS) && printf "Compiling: $(notdir $<)"
 
 $(NAME): $(OBJS)
-	@$(CC) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
+	@$(CC) $(FS) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
 
 clean:
 	@rm -rf $(OBJS)

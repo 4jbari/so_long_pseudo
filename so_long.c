@@ -43,12 +43,29 @@ void print_background(char **map, void *mlx, game_t *game)
     int j;
     i = 0;
     j = 0;
+    game->y = 0;
     while (map[j])
     {
         game->x = 0;
         i = 0;
         while (map[j][i])
         {
+            print_element(game->x, game->y, "stone.png", game);
+            game->x+= 64;
+            i++;
+        }
+        j++;
+        game->y+= 64;
+    }
+    game->y = 0;
+    j = 0;
+    while (map[j])
+    {
+        game->x = 0;
+        i = 0;
+        while (map[j][i])
+        {
+
             if (map[j][i] == '1')
                 print_element(game->x, game->y, "RockWall_Dark.png", game);
             else if(map[j][i] == 'C')
@@ -67,11 +84,22 @@ void print_background(char **map, void *mlx, game_t *game)
 void    move_player(int yo, int xo, game_t *game)
 {
     game->map[game->player->instances->y/64][game->player->instances->x/64] = '0';
-    int new_y = game->player->instances->y+=yo;
-    int new_x = game->player->instances->x+=xo;
+    int new_y = game->player->instances->y+yo;
+    int new_x = game->player->instances->x+xo;
+
+    printf("game->map[new_y/64][new_x/64]:%c\n",game->map[new_y/64][new_x/64] );
     if(game->map[new_y/64][new_x/64] == 'C')
+    {
+        game->map[new_y/64][new_x/64] = 'P';
         printf("haha\n\n\n\n");
-    game->map[game->player->instances->y/64][game->player->instances->x/64] = 'P';
+        mlx_delete_image(game->mlx, game->player);
+        print_background(game->map, game->mlx, game);
+        return ;
+
+    }
+    game->player->instances->y+=yo;
+    game->player->instances->x+=xo;
+
 
 }
 void my_keyhook(mlx_key_data_t keydata, void *parm)
@@ -79,13 +107,13 @@ void my_keyhook(mlx_key_data_t keydata, void *parm)
     game_t *game;
 
     game = (game_t *)parm;
-     int   x  = 0 ;
-    while (game->map[x])
-    {
-        printf("bufferBo:%s\n", game->map[x]);
-        x++;
-    }
-	printf("game->player->instances->y:%c\n", game->map[game->player->instances->y/64][game->player->instances->x/64]);
+    //  int   x  = 0 ;
+    // while (game->map[x])
+    // {
+    //     printf("bufferBo:%s\n", game->map[x]);
+    //     x++;
+    // }
+	// printf("game->player->instances->y:%c\n", game->map[game->player->instances->y/64][game->player->instances->x/64]);
     if ((keydata.key == MLX_KEY_DOWN || keydata.key == MLX_KEY_S) && keydata.action == MLX_PRESS \
         && game->map[game->player->instances->y/64 + 1][game->player->instances->x/64] != '1')
         move_player(64, 0, game);
@@ -103,9 +131,14 @@ void my_keyhook(mlx_key_data_t keydata, void *parm)
         move_player(-64, 0, game);
 }
 
+void leaks()
+{
+    system("leaks -q Game");
+}
 int main(int ac, char **av)
 {
     (void)ac;
+    atexit(leaks);
 
 
     game_t game;

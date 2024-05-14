@@ -8,24 +8,24 @@ int path_find(char **map, int x, int y, int xs, int ys)
         return 1;
     else if (map[y][x] == '0')
         map[y][x] = '1';
-    int q  = 0 ;
-    while (map[q])
-    {
-        printf("bufferq :%s\n", map[q]);
-        q++;
-    } 
-    printf("\n\n");
+    // int q  = 0 ;
+    // while (map[q])
+    // {
+    //     printf("bufferq :%s\n", map[q]);
+    //     q++;
+    // } 
+    // printf("\n\n");
     if (path_find(map, x - 1, y, xs, ys) || 
         path_find(map, x, y+1, xs, ys) || path_find(map, x + 1, y, xs, ys) 
         || path_find(map, x, y - 1, xs, ys))
     {
-        q = 0;
-        while (map[q])
-        {
-            printf("bufferq2 :%s\n", map[q]);
-            q++;
-        } 
-        printf("\n\n");
+        // q = 0;
+        // while (map[q])
+        // {
+        //     printf("bufferq2 :%s\n", map[q]);
+        //     q++;
+        // } 
+        // printf("\n\n");
         if (map[y][x] == '1')
             map[y][x] = '0';
         return (1);
@@ -156,16 +156,16 @@ void    ft_read1(int fd, char ***buffer)
     //spliting
     line = get_next_line(fd);
     jn = ft_join(jn, line);
-    
+    free(line);
 
     while (line)
     {
         line = get_next_line(fd);
         jn = ft_join(jn, line);
+        free(line);
     }
     *buffer = ft_split(jn,'\n');
-
-
+    free(jn);
 }
 int check_format(char *av)
 {
@@ -183,10 +183,12 @@ int check_format(char *av)
     return (0);
 }
 
+
 char    **parsing(char *av, game_t *game)
 {
     char **buffer;
     buffer = NULL;
+
 
     if (!check_format(av))
     {
