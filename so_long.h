@@ -21,8 +21,8 @@ typedef struct info{
     mlx_image_t *player;
     mlx_t       *mlx;
     char        **map;
-
-
+    int         exit;
+    int         coin;
 } game_t;
 
 char    **parsing(char *av, game_t *game);
@@ -32,7 +32,10 @@ int     check_format(char *av);
 void    ft_read1(int fd, char ***buffer);
 void    check_size(char **map);
 void    check_elements(char **buffer, game_t *game);
-int    check_path(char **map);
+int    check_path(game_t *game, char **map);
+
+char    **copy_map(char **buffer);
+void    free_map(char **map);
 
 
 

@@ -1,42 +1,37 @@
 #include "so_long.h"
-
-int path_find(char **map, int x, int y, int xs, int ys)
+int flag = 0;
+void path_find(game_t *game, char **map, int x, int y,int ys)
 {
-    if (x < 0 || x > xs || y < 0 || y > ys || map[y][x] == '1')
-        return (0);
-    else if (map[y][x] == 'E')
-        return 1;
-    else if (map[y][x] == '0')
-        map[y][x] = '1';
-    // int q  = 0 ;
-    // while (map[q])
-    // {
-    //     printf("bufferq :%s\n", map[q]);
-    //     q++;
-    // } 
-    // printf("\n\n");
-    if (path_find(map, x - 1, y, xs, ys) || 
-        path_find(map, x, y+1, xs, ys) || path_find(map, x + 1, y, xs, ys) 
-        || path_find(map, x, y - 1, xs, ys))
+    if (map[y][x] == '1' || map[y][x]  == '2' || x < 0 || x > (int)(ft_strlen(map[1])) || y < 0 || y > ys)
     {
-        // q = 0;
-        // while (map[q])
-        // {
-        //     printf("bufferq2 :%s\n", map[q]);
-        //     q++;
-        // } 
-        // printf("\n\n");
-        if (map[y][x] == '1')
-            map[y][x] = '0';
-        return (1);
-    }
-    if (map[y][x] == '1')
-        map[y][x] = '0';
-    return (0);
-}
+        // printf("fail >> return\n\n");
+        return;
+    }        
+    
+    if (map[y][x] == 'C')
+        game->coin++;
+    if (map[y][x] == 'E')
+        game->exit++;
+    if (map[y][x] && map[y][x] != '1')
+        map[y][x] = '1';
+    // int x1 = 0;
+    // while (map[x1])
+    // {
+    //     printf("buffer :%s\n", map[x1]);
+    //     x1++;
+    // }
+    // printf("daaam:\n\n\n");
+    // sleep(1);
 
-int    check_path(char **map)
+    path_find(game, map, x - 1, y, ys);
+    path_find(game, map, x, y + 1, ys);
+    path_find(game, map, x + 1, y, ys);
+    path_find(game, map, x, y - 1, ys);
+}  
+
+int    check_path(game_t *game, char **map)
 {
+    (void)game;//
     int ys;
     int xs;
     int x;
@@ -65,9 +60,16 @@ int    check_path(char **map)
     }
     // printf("nys:%d\n", ys);
     // printf("nys:%d\n", xs);
-    if(path_find(map, x, y, xs - 1, ys - 1))
-        return (1);
- 
+    char **map1 = copy_map(map);
+
+    path_find(game, map1, x, y, ys - 1);
+    int x1 = 0;
+    while (map[x1])
+    {
+        printf("buffer :%s\n", map[x1]);
+        x1++;
+    }
+    free_map(map1);
     return (0);
 }
 void    check_elements(char **buffer, game_t *game)
@@ -142,9 +144,7 @@ void    check_size(char **map)
     while (map[0][y] && map[0][y] == '1' && map[j][y] == '1')
         y++;
     if (y != ft_strlen(map[0]))
-    {
         write (2, "the firstline and the last must be borders\n", 43);
-    }
 }
 
 void    ft_read1(int fd, char ***buffer)
@@ -189,6 +189,7 @@ int check_format(char *av)
 char    **parsing(char *av, game_t *game)
 {
     char **buffer;
+
     buffer = NULL;
 
 
@@ -212,8 +213,9 @@ char    **parsing(char *av, game_t *game)
     // }
     check_size(buffer);
     check_elements(buffer, game);
-    if (!check_path(buffer))
-        write(2, "Error:nopath\n", 13);
+    check_path(game, buffer);
+    // if (game->exit != 1 ||  != 0)
+    //     write(2, "Error:nopath\n", 13);
     // x  = 0 ;
     // while (buffer[x])
     // {

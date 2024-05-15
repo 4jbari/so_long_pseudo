@@ -4,7 +4,7 @@ LIBMLX	:= ~/MLX42
 LIBFT	:= libft
 HEADERS	:= -I ./include -I $(LIBMLX)/include -I $(LIBFT)/include
 LIBS	:= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm -framework Cocoa -framework OpenGL -framework IOKit $(LIBFT)/libft.a
-SRCS	:= so_long.c parsing.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c
+SRCS	:= so_long.c parsing.c parsing_utils.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c 
 OBJS	:= ${SRCS:.c=.o}
 
 # FS = -fsanitize=address -g
