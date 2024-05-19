@@ -18,11 +18,15 @@ typedef struct info{
     int         c;
     int         x;
     int         y;
+    int         lines;
     mlx_image_t *player;
     mlx_t       *mlx;
     char        **map;
     int         exit;
     int         coin;
+    char        *path;
+    int         exitx;
+    int         exity;
 } game_t;
 
 char    **parsing(char *av, game_t *game);

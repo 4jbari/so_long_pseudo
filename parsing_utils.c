@@ -25,7 +25,7 @@ char    **copy_map(char **buffer)
 
     i = 0;
 
-    printf(">>j:%d\n",j);
+    // printf(">>j:%d\n",j);
     char **map = malloc(sizeof(char **) * j + 1);
 
     while (buffer[i])
@@ -34,12 +34,12 @@ char    **copy_map(char **buffer)
         i++;
     }
     map[i] = NULL;
-    int x = 0;
-    while (map[x])
-    {
-        printf(">>%s\n", map[x]);
-        x++;
-    }
+    // int x = 0;
+    // while (map[x])
+    // {
+    //     printf(">>%s\n", map[x]);
+    //     x++;
+    // }
     ///
 
     return (map);
@@ -54,6 +54,6 @@ void    free_map(char **map)
         x++;
     }
     free(map);
-    printf("haha\n\n");
+    // printf("haha\n\n");
 
 }

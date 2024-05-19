@@ -6,11 +6,9 @@ void    print_element(int x, int y, char *path, game_t *game)
     mlx_image_t *img = mlx_texture_to_image(game->mlx, texture);
     mlx_delete_texture(texture);
     mlx_image_to_window(game->mlx, img, x, y);
-
-
 }
 
-void get_player(char **map, game_t *game , void *mlx)
+void get_player(char **map, game_t *game , void *mlx, char *path)
 {
     int i;
     int j;
@@ -28,7 +26,7 @@ void get_player(char **map, game_t *game , void *mlx)
         {
             if (map[j][i] == 'P')
             {
-                texture = mlx_load_png("output-onlinepngtools.png");
+                texture = mlx_load_png(path);
                 game->player = mlx_texture_to_image(mlx, texture);
                 mlx_delete_texture(texture);
                 mlx_image_to_window(mlx, game->player, x, y);
@@ -81,29 +79,117 @@ void print_background(char **map, void *mlx, game_t *game)
         j++;
         game->y+= 64;
     }
-    get_player(map, game, mlx);
+    get_player(map, game, mlx, "right.png");
 }
 
 void    move_player(int yo, int xo, game_t *game)
 {
-    game->map[game->player->instances->y/64][game->player->instances->x/64] = '0';
-    int new_y = game->player->instances->y+yo;
-    int new_x = game->player->instances->x+xo;
-
-    printf("game->map[new_y/64][new_x/64]:%c\n", game->map[new_y/64][new_x/64]);
+    int new_y;
+    int new_x;
+    
+    new_y = game->player->instances->y+yo;
+    new_x = game->player->instances->x+xo;
+    if (game->map[game->player->instances->y/64][game->player->instances->x/64] != 'E')
+        game->map[game->player->instances->y/64][game->player->instances->x/64] = '0';
+    printf("path%s\n", game->path);
+    printf("game->map[new_y/64][new_x/64]:%c\nnew_x/64:%d\n\nnew_y/64%d\n", game->map[new_y/64][new_x/64], new_y/64, new_x/64);
     if(game->map[new_y/64][new_x/64] == 'C')
     {
         game->map[new_y/64][new_x/64] = 'P';
         printf("haha\n\n\n\n");
         mlx_delete_image(game->mlx, game->player);
         print_element(new_x, new_y, "stone.png", game);
-        get_player(game->map, game, game->mlx);
+        get_player(game->map, game, game->mlx, game->path);
+        game->c--;
         return ;
-
     }
+    printf("coidsL:%d\n", game->c);
+    if (new_y/64 == game->exity && new_x/64 == game->exitx && game->c == 0)
+        exit(1);  
+   // if (game->map[new_y/64][new_x/64] == 'E' && game->c == 0)
+    //     exit(1);
     game->player->instances->y+=yo;
     game->player->instances->x+=xo;
 }
+void    move_right(int yo, int xo, game_t *game)
+{
+    int new_y;
+    int new_x;
+    
+    new_y = game->player->instances->y+yo;
+    new_x = game->player->instances->x+xo;
+    if (game->map[game->player->instances->y/64][game->player->instances->x/64] != 'E')
+        game->map[game->player->instances->y/64][game->player->instances->x/64] = '0';
+
+    
+    printf("game->map[new_y/64][new_x/64]:%c\nnew_x/64:%d\n\nnew_y/64%d\n", game->map[new_y/64][new_x/64], new_y/64, new_x/64);
+    if(game->map[new_y/64][new_x/64] == 'C')
+    {
+        game->map[new_y/64][new_x/64] = 'P';
+        printf("haha\n\n\n\n");
+        mlx_delete_image(game->mlx, game->player);
+        print_element(new_x, new_y, "stone.png", game);
+        get_player(game->map, game, game->mlx, "right.png");
+        game->c--;
+        return ;
+    }
+    if (new_y/64 == game->exity && new_x/64 == game->exitx && game->c == 0)
+        exit(1);  
+    // if (game->map[new_y/64][new_x/64] == 'E')
+    // {
+    //     game->map[new_y/64][new_x/64] = 'P';
+    //     mlx_delete_image(game->mlx, game->player);
+    //     get_player(game->map, game, game->mlx, "left.png");
+    //     game->map[new_y/64][new_x/64] = 'E';
+    //     return;
+    // }
+    game->map[new_y/64][new_x/64] = 'P';
+    mlx_delete_image(game->mlx, game->player);
+    get_player(game->map, game, game->mlx, "right.png");
+    printf("coidsL:%d\n", game->c);
+    // game->player->instances->y+=yo;
+    // game->player->instances->x+=xo;
+}
+void    move_left(int yo, int xo, game_t *game)
+{
+    int new_y;
+    int new_x;
+    
+    new_y = game->player->instances->y+yo;
+    new_x = game->player->instances->x+xo;
+    if (game->map[game->player->instances->y/64][game->player->instances->x/64] != 'E')
+        game->map[game->player->instances->y/64][game->player->instances->x/64] = '0';
+
+    
+    printf("game->map[new_y/64][new_x/64]:%c\nnew_x/64:%d\n\nnew_y/64%d\n", game->map[new_y/64][new_x/64], new_y/64, new_x/64);
+    if(game->map[new_y/64][new_x/64] == 'C')
+    {
+        game->map[new_y/64][new_x/64] = 'P';
+        printf("haha\n\n\n\n");
+        mlx_delete_image(game->mlx, game->player);
+        print_element(new_x, new_y, "stone.png", game);
+        get_player(game->map, game, game->mlx, "left.png");
+        game->c--;
+        return ;
+    }
+    if (new_y/64 == game->exity && new_x/64 == game->exitx && game->c == 0)
+        exit(1);    
+    // if (game->map[new_y/64][new_x/64] == 'E')
+    // {
+    //     game->map[new_y/64][new_x/64] = 'P';
+    //     mlx_delete_image(game->mlx, game->player);
+    //     get_player(game->map, game, game->mlx, "left.png");
+    //     game->map[new_y/64][new_x/64] = 'E';
+    //     return;
+    // }
+    game->map[new_y/64][new_x/64] = 'P';
+    mlx_delete_image(game->mlx, game->player);
+    get_player(game->map, game, game->mlx, "left.png");
+    printf("coidsL:%d\n", game->c);
+    // game->player->instances->y+=yo;
+    // game->player->instances->x+=xo;
+}
+
 void my_keyhook(mlx_key_data_t keydata, void *parm)
 {
     game_t *game;
@@ -118,19 +204,33 @@ void my_keyhook(mlx_key_data_t keydata, void *parm)
 	// printf("game->player->instances->y:%c\n", game->map[game->player->instances->y/64][game->player->instances->x/64]);
     if ((keydata.key == MLX_KEY_DOWN || keydata.key == MLX_KEY_S) && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT)\
         && game->map[game->player->instances->y/64 + 1][game->player->instances->x/64] != '1')
+        
         move_player(64, 0, game);
-
-	if ((keydata.key == MLX_KEY_RIGHT || keydata.key == MLX_KEY_D )&& (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT)\
-        && game->map[game->player->instances->y/64][game->player->instances->x/64 + 1] != '1')
-        move_player(0, 64, game);
-
-	if ((keydata.key == MLX_KEY_LEFT || keydata.key == MLX_KEY_A)&& (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT)\
-        && game->map[game->player->instances->y/64][game->player->instances->x/64-1] != '1')
-        move_player(0, -64, game);
 
     if ((keydata.key == MLX_KEY_UP || keydata.key == MLX_KEY_W) && (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT)\
         && game->map[game->player->instances->y/64 -1 ][game->player->instances->x/64] != '1')
+    {
         move_player(-64, 0, game);
+
+    }
+
+	if ((keydata.key == MLX_KEY_RIGHT || keydata.key == MLX_KEY_D )&& (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT)\
+        && game->map[game->player->instances->y/64][game->player->instances->x/64 + 1] != '1')
+    {
+        // move_player(0, 64, game);
+        move_right(0, 64, game);
+        game->path = "right.png";
+
+    }
+
+	if ((keydata.key == MLX_KEY_LEFT || keydata.key == MLX_KEY_A)&& (keydata.action == MLX_PRESS || keydata.action == MLX_REPEAT)\
+        && game->map[game->player->instances->y/64][game->player->instances->x/64-1] != '1')
+    {
+        move_left(0, -64, game);
+        game->path = "left.png";
+    }
+
+
 }
 
 void leaks()
@@ -153,7 +253,7 @@ int main(int ac, char **av)
         y++;
     game.y = y;
     int i = 0;
-    //  j = 0;
+    //  int j = 0;
     // while (game.map[j])
     // {
     //     i = 0;
@@ -164,11 +264,20 @@ int main(int ac, char **av)
     //     }
     //     j++;
     // }
-    game.mlx = mlx_init(game.x * 64,game.y * 64, "test", true);
+    // i = 0;
+    // j = 0;
+
+    // while (game.map[j])
+    // {
+    //     printf("%s\n", game.map[j]);
+    //     j++;
+    // }
+    game.mlx = mlx_init(game.x * 64,  game.y * 64, "test", true);
     
 
     print_background(game.map, game.mlx, &game);//printing the background && the player 
 
+    game.path = "right.png";
     mlx_key_hook(game.mlx, &my_keyhook, &game);// moving the player 
 
     mlx_loop(game.mlx);
