@@ -8,6 +8,7 @@
 #include <fcntl.h>
 #include "get_next_line/get_next_line.h"
 # include "libft/libft.h"
+# include "ft_printf/ft_printf.h"
 # include <MLX42/MLX42.h>
 
 #ifndef BUFFERSIZE
@@ -27,6 +28,12 @@ typedef struct info{
     char        *path;
     int         exitx;
     int         exity;
+    //for iter
+    int         j;
+    int         i;
+    int         xinstance;
+    int         yinstance;
+    int         movement;
 } game_t;
 
 char    **parsing(char *av, game_t *game);
