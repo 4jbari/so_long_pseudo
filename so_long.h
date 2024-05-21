@@ -49,9 +49,9 @@ char    **copy_map(char **buffer);
 void    free_map(char **map);
 
 
+void ft_error(char *s, int fd);
 
-
-
+int compare(char *s1, char *s2);
 
 //reedited ft_strlen and ft_strjoin
 

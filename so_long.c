@@ -5,16 +5,39 @@ void	print_element(int x, int y, char *path, game_t *game)
 	mlx_texture_t	*texture;
 	mlx_image_t		*img;
 
+	img = NULL;
+
 	texture = mlx_load_png(path);
+	if (!texture)
+		ft_error("Error:\nloading png failed", 2);
+
 	img = mlx_texture_to_image(game->mlx, texture);
+	if (!img)
+		ft_error("Error\nmlx_texture_to_imag",2);
+
 	mlx_delete_texture(texture);
-	mlx_image_to_window(game->mlx, img, x, y);
+	if (mlx_image_to_window(game->mlx, img, x, y) < 0)
+		ft_error("Error\nimage_to_window failed", 2);
+
+}
+void	print_player(game_t *game, void *mlx, char *path)
+{
+	mlx_texture_t *texture;
+
+	texture = mlx_load_png(path);
+	if (!texture)
+		ft_error("Error\nload_png", 2);
+	game->player = mlx_texture_to_image(mlx, texture);
+	if (!game->player)
+		ft_error("Error\ntexture_to_image failed", 2);
+	mlx_delete_texture(texture);
+	if (mlx_image_to_window(mlx, game->player, game->x, game->y) < 0)
+		ft_error("Error\nimage_to_window failed", 2);
+
 }
 
 void	get_player(char **map, game_t *game, void *mlx, char *path)
 {
-	mlx_texture_t	*texture;
-
 	game->x = 0;
 	game->y = 0;
 	game->j = 0;
@@ -26,12 +49,7 @@ void	get_player(char **map, game_t *game, void *mlx, char *path)
 		while (map[game->j][game->i])
 		{
 			if (map[game->j][game->i] == 'P')
-			{
-				texture = mlx_load_png(path);
-				game->player = mlx_texture_to_image(mlx, texture);
-				mlx_delete_texture(texture);
-				mlx_image_to_window(mlx, game->player, game->x, game->y);
-			}
+				print_player(game, mlx, path);
 			game->i++;
 			game->x += 64;
 		}
@@ -212,7 +230,7 @@ int	main(int ac, char **av)
 	(void)ac;
 	atexit(leaks);
 	if (!av[1])
-		write(2, "nofile\n", 8);
+		ft_error("Error\n", 2);
 	game.map = parsing(av[1], &game);
 	game.x = ft_strlen(game.map[0]);
 	y = 1;

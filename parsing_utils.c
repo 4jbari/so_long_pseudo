@@ -1,18 +1,11 @@
 #include "so_long.h"
 int count_lines(char **buffer)
 {
-    int i;
     int j;
     
-    i = 0;
     j = 0;
     while (buffer[j])
-    {
-        i = 0;
-        while (buffer[j][i])
-            i++;
         j++;
-    }
     return (j);
 }
 
@@ -25,8 +18,8 @@ char    **copy_map(char **buffer)
 
     i = 0;
 
-    // printf(">>j:%d\n",j);
-    char **map = malloc(sizeof(char **) * j + 1);
+    printf(">>j:%d\n",j);
+    char **map = malloc(sizeof(char **) * (j + 1));
 
     while (buffer[i])
     {
@@ -35,15 +28,12 @@ char    **copy_map(char **buffer)
     }
     map[i] = NULL;
     // int x = 0;
-    // while (map[x])
+    // while (map[x-1])
     // {
     //     printf(">>%s\n", map[x]);
     //     x++;
     // }
-    ///
-
     return (map);
-
 }
 void    free_map(char **map)
 {

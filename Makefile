@@ -11,7 +11,7 @@ PRINTF	    = $(PRINTFPATH)/libftprintf.a
 HEADERS	:= -I ./include -I $(LIBMLX)/include -I $(LIBFT)/include -I $(PRINTF)/include
 LIBS	:= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm -framework Cocoa -framework OpenGL -framework IOKit \
 			$(LIBFTPATH)/libft.a $(PRINTFPATH)/libftprintf.a
-SRCS	:= so_long.c parsing.c parsing_utils.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c 
+SRCS	:= so_long.c so_long_utils.c parsing.c parsing_utils.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c 
 OBJS	:= ${SRCS:.c=.o}
 
 # FS = -fsanitize=address -g
