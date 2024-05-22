@@ -6,14 +6,12 @@
 /*   By: ajbari <ajbari@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 19:48:58 by ajbari            #+#    #+#             */
-/*   Updated: 2024/05/14 15:19:51 by ajbari           ###   ########.fr       */
+/*   Updated: 2024/05/22 11:44:10 by ajbari           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-//
-#include <stdio.h>
-//
+
 char	*ft_re_line(char *line)
 {
 	char	*return_line;
@@ -61,19 +59,18 @@ char	*rest(char *line)
 
 int	check_nl(char *buffer)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (buffer[i])
 	{
 		if ((buffer[i]) == '\n')
 		{
-			if (buffer[i+1] == '\n')
+			if (buffer[i + 1] == '\n')
 			{
-                write(2, "empty line\n", 11);
-                exit(1);
+				write(2, "Error:empty line\n", 17);
+				exit(1);
 			}
-
 			return (1);
 		}
 		i++;
@@ -103,9 +100,7 @@ void	ft_read(int fd, char **line)
 			return ;
 		}
 		buffer[bytes_readed] = '\0';
-		// printf("buf === %s\n", buffer);
 		flag = check_nl(buffer);
-		
 		*line = ft_join(*line, buffer);
 	}
 	ft_free(&buffer);
@@ -115,6 +110,7 @@ char	*get_next_line(int fd)
 {
 	static char	*line;
 	char		*new_line;
+
 	new_line = NULL;
 	if (read(fd, new_line, 0) == -1 || BUFFER_SIZE <= 0)
 		return (ft_free(&line));

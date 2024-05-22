@@ -19,10 +19,10 @@ bonus: $(BTOOBJ)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -fr $(TOOBJ) $(BTOOBJ)
+	@rm -fr $(TOOBJ) $(BTOOBJ)
 
 fclean: clean
-	rm -fr $(NAME)
+	@rm -fr $(NAME)
 
 re: fclean all
 

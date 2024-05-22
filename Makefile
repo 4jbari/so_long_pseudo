@@ -8,10 +8,11 @@ LIBFT       = $(LIBFTPATH)/libft.a
 PRINTFPATH 	= ft_printf
 PRINTF	    = $(PRINTFPATH)/libftprintf.a
 
-HEADERS	:= -I ./include -I $(LIBMLX)/include -I $(LIBFT)/include -I $(PRINTF)/include
+HEADERS	:= -I ./include -I $(LIBMLX)/include -I $(LIBFTPATH)/include -I $(PRINTFPATH)/include
 LIBS	:= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm -framework Cocoa -framework OpenGL -framework IOKit \
 			$(LIBFTPATH)/libft.a $(PRINTFPATH)/libftprintf.a
-SRCS	:= so_long.c so_long_utils.c parsing.c parsing_utils.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c 
+SRCS	:= so_long.c so_long_utils.c printing.c parsing.c parsing_utils.c get_next_line/get_next_line.c get_next_line/get_next_line_utils.c 
+
 OBJS	:= ${SRCS:.c=.o}
 
 # FS = -fsanitize=address -g
@@ -20,32 +21,32 @@ OBJS	:= ${SRCS:.c=.o}
 all: libmlx $(LIBFT) $(PRINTF) $(NAME) 
 
 $(LIBFT) : 
-	make -C $(LIBFTPATH) 
+	@make -C $(LIBFTPATH) 
 
 $(PRINTF) :
-	make -C $(PRINTFPATH) all
+	@make -C $(PRINTFPATH) all
 
 libmlx: 
 	@cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
 
 %.o: %.c
-	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS) 
+	$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS) 
 
-$(NAME): $(OBJS)
-	@$(CC)  $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
+$(NAME): $(OBJS) so_long.h
+	$(CC)  $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
 
 clean:
 	@rm -rf $(OBJS)
-	@rm -rf $(LIBFTPATH)/*.o
-	@rm -rf $(PRINTFPATH)/*.o
+	@make -C $(LIBFTPATH) clean
+	@make -C $(PRINTFPATH) clean
 
 fclean: clean
 	@rm -rf $(LIBMLX)/build
 	@rm -rf $(NAME)
 
-	@rm -rf $(LIBFTPATH)/*.a
-	@rm -rf $(PRINTFPATH)/*.a
+	@make -C $(LIBFTPATH) fclean
+	@make -C $(PRINTFPATH) fclean
 
 re: clean all
 
-.PHONY: all, clean, fclean, re, libmlx
+.PHONY: all clean fclean re libmlx
